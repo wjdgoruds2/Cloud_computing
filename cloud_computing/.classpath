@@ -2,24 +2,24 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/awssdk/aws-java-sdk-1.12.111.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/awssdk/aws-java-sdk-1.12.111-javadoc.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/awssdk/aws-java-sdk-1.12.111-sources.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/etclib/joda-time-2.0.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/etclib/org-apache-commons-logging.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/http/commons-codec-1.11.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/http/commons-logging-1.2.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/http/fluent-hc-4.5.10.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/http/httpclient-4.5.10.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/http/httpclient-cache-4.5.10.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/http/httpclient-osgi-4.5.10.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/http/httpclient-win-4.5.10.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/http/httpcore-4.4.12.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/http/httpmime-4.5.10.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/http/jna-4.5.2.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/http/jna-platform-4.5.2.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/jackson/jackson-annotations-2.10.0.pr3.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/jackson/jackson-core-2.10.0.pr3.jar"/>
-	<classpathentry kind="lib" path="/home/wjdgoruds2/git/Cloud_computing/cloud_computing/src/libs/jackson/jackson-databind-2.10.0.pr3.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/awssdk/aws-java-sdk-1.12.111.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/awssdk/aws-java-sdk-1.12.111-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/awssdk/aws-java-sdk-1.12.111-sources.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/etclib/joda-time-2.0.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/etclib/org-apache-commons-logging.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/http/commons-codec-1.11.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/http/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/http/fluent-hc-4.5.10.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/http/httpclient-4.5.10.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/http/httpclient-cache-4.5.10.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/http/httpclient-osgi-4.5.10.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/http/httpclient-win-4.5.10.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/http/httpcore-4.4.12.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/http/httpmime-4.5.10.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/http/jna-4.5.2.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/http/jna-platform-4.5.2.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/jackson/jackson-annotations-2.10.0.pr3.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/jackson/jackson-core-2.10.0.pr3.jar"/>
+	<classpathentry kind="lib" path="/home/wjdgoruds2/libs/jackson/jackson-databind-2.10.0.pr3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
