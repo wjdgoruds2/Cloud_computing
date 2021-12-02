@@ -1,13 +1,18 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
+import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
+import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressResult;
 import com.amazonaws.services.ec2.model.AvailabilityZone;
 import com.amazonaws.services.ec2.model.DescribeAvailabilityZonesResult;
 import com.amazonaws.services.ec2.model.DescribeImagesRequest;
@@ -18,15 +23,23 @@ import com.amazonaws.services.ec2.model.DescribeRegionsResult;
 import com.amazonaws.services.ec2.model.Image;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.InstanceType;
+import com.amazonaws.services.ec2.model.IpPermission;
+import com.amazonaws.services.ec2.model.IpRange;
 import com.amazonaws.services.ec2.model.RebootInstancesRequest;
 import com.amazonaws.services.ec2.model.RebootInstancesResult;
 import com.amazonaws.services.ec2.model.Region;
 import com.amazonaws.services.ec2.model.Reservation;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.RunInstancesResult;
+import com.amazonaws.services.ec2.model.SecurityGroup;
 import com.amazonaws.services.ec2.model.StartInstancesRequest;
 import com.amazonaws.services.ec2.model.StopInstancesRequest;
-
+import com.amazonaws.services.ec2.model.CreateSecurityGroupRequest;
+import com.amazonaws.services.ec2.model.CreateSecurityGroupResult;
+import com.amazonaws.services.ec2.model.DeleteSecurityGroupRequest;
+import com.amazonaws.services.ec2.model.DeleteSecurityGroupResult;
+import com.amazonaws.services.ec2.model.DescribeSecurityGroupsRequest;
+import com.amazonaws.services.ec2.model.DescribeSecurityGroupsResult;
 
 public class ec2_instance {
 	static AmazonEC2 ec2;
@@ -71,7 +84,11 @@ public class ec2_instance {
 			System.out.println(" 3. start instance	4. available regions ");
 			System.out.println(" 5. stop instance	6. create instance ");
 			System.out.println(" 7. reboot instance	8. list images ");
-			System.out.println(" 			99. quit ");
+			System.out.println(" 9. list security group");
+			System.out.println(" 10. describe security group");
+			System.out.println(" 11. create security group");
+			System.out.println(" 12. delete security group");
+			System.out.println(" 99. quit ");
 			System.out.println("------------------------------------------------------------");
 			System.out.print("Enter an integer: ");
 			num=menu.nextInt();
@@ -99,6 +116,18 @@ public class ec2_instance {
 		    }
 		    else if (num==8) {
 		    	list_images();
+		    }
+		    else if (num==9) {
+		    	list_security_group();
+		    }
+		    else if (num==10) {
+		    	describe_security_group();
+		    }
+		    else if (num==11) {
+		    	create_security_group();
+		    }
+		    else if (num==12) {
+		    	delete_security_group();
 		    }
 		    else if (num==99) {
 		    	istrue=false;
@@ -256,6 +285,226 @@ public class ec2_instance {
 	    	System.out.printf("[ImageID] %s, [Name] %s, [Owner] %s",image_id,name,owner);
 	    
 	    }
+	}
+	public static void list_security_group() {
+		DescribeSecurityGroupsRequest request =new DescribeSecurityGroupsRequest();
+		System.out.println("Listing security group....");
+		DescribeSecurityGroupsResult response =ec2.describeSecurityGroups(request);
+		for(SecurityGroup group : response.getSecurityGroups()) {
+            System.out.printf(
+                "\n[security group id] : %s  " +
+                "[group name] : %s  " +
+                "[vpc id] : %s  " +
+                "[description] : %s  ",
+                group.getGroupId(),
+                group.getGroupName(),
+                group.getVpcId(),
+                group.getDescription());
+		}
+	}
+	public static void describe_security_group() {
+		String sercurity_group_id=null;
+		System.out.print("Enter security group id: ");  
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			sercurity_group_id = br.readLine();
+		} catch(IOException e){
+			e.printStackTrace();
+		}  
+
+		DescribeSecurityGroupsRequest request =
+	            new DescribeSecurityGroupsRequest()
+	                .withGroupIds(sercurity_group_id);
+
+	        DescribeSecurityGroupsResult response =
+	            ec2.describeSecurityGroups(request);
+	        for(SecurityGroup group : response.getSecurityGroups()) {
+	            System.out.printf(
+	                "\nFound security group with id : %s " +
+	                "\nOwnerId : %s " +
+	                "\nTags : %s " +
+	                "\nvpc id : %s " +	                    
+	                "\ndescription : %s",
+	                group.getGroupId(),
+	                group.getOwnerId(),
+	                group.getTags(),
+	                group.getVpcId(),
+	                group.getDescription());
+	            List<IpPermission> ipdes = group.getIpPermissions();
+	            for (int k = 0; k < ipdes.size(); k++) {
+	            	System.out.println();
+	            	System.out.println("============================");
+	    			System.out.println((k+1)+"번째 protocol description");
+	    			System.out.println("============================");
+	            	System.out.printf("[IpProtocol] : %s, [FromPort] : %s, [ToPort] : %s, [getIpv4Ranges] : %s ",
+	            			ipdes.get(k).getIpProtocol(),
+	    	                ipdes.get(k).getFromPort(),
+	    	                ipdes.get(k).getToPort(),
+	    	                ipdes.get(k).getIpv4Ranges());
+	            	System.out.println();
+	     
+	            }
+	            
+	    	}   
+	        
+	}
+	public static void create_security_group() {
+		String group_name=null;
+		String group_desc=null;
+		String vpc_id=null;
+		int cnt=0;
+		System.out.printf("-Enter security group_name: ");
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			group_name = br.readLine();
+		} catch(IOException e){
+			e.printStackTrace();
+		}
+		System.out.printf("-Enter security group_desc: ");  
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			group_desc = br.readLine();
+		} catch(IOException e){
+			e.printStackTrace();
+		}
+		System.out.printf("-Enter security vpc_id: ");  
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			vpc_id = br.readLine();
+		} catch(IOException e){
+			e.printStackTrace();
+		}
+
+		CreateSecurityGroupRequest create_request = new
+		    CreateSecurityGroupRequest()
+		        .withGroupName(group_name)
+		        .withDescription(group_desc)
+		        .withVpcId(vpc_id);
+
+		CreateSecurityGroupResult create_response =ec2.createSecurityGroup(create_request);
+		
+		IpRange ip_range = new IpRange().withCidrIp("0.0.0.0/0");
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Number of inbound to set: ");
+        int count = scanner.nextInt();
+        List<IpPermission> ipPermissions = new ArrayList<>();
+
+        for (int i = 0; i < count; i++) {
+        	String protocolname=null;
+        	int endport=0;
+        	int startport=0;
+        	System.out.println("============================================================");
+			System.out.println((i+1)+"번째 inbound 설정");
+			System.out.println("============================================================");
+        	System.out.println(" 1. 사용자 지정 TCP 	2. 사용자 지정 UDP ");
+    		System.out.println(" 3. 모든 TCP		4. 모든 TCP ");
+    		System.out.println(" 5. 모든 ICMP-IPv4	6. SSH ");
+    		System.out.println(" 7. SMTP		8. HTTP ");
+    		System.out.println("============================================================");
+        	System.out.print("--->Enter an protocol: ");
+        	int protocol = scanner.nextInt();
+        	if (protocol==1) {
+        		System.out.print("--->Enter an startport: ");
+            	startport = scanner.nextInt();
+            	
+            	System.out.print("--->Enter an endport: ");
+            	endport = scanner.nextInt();
+        		ipPermissions.add(
+                        new IpPermission()
+            	            .withIpProtocol("tcp")
+            	            .withToPort(endport)
+            	            .withFromPort(startport)
+            	            .withIpv4Ranges(ip_range));
+		    }
+		    else if (protocol==2) {
+		    	System.out.print("--->Enter an startport: ");
+	        	startport = scanner.nextInt();
+	        	
+	        	System.out.print("--->Enter an endport: ");
+	        	endport = scanner.nextInt();
+		    	ipPermissions.add(
+                        new IpPermission()
+            	            .withIpProtocol("udp")
+            	            .withToPort(endport)
+            	            .withFromPort(startport)
+            	            .withIpv4Ranges(ip_range));
+		    }
+		    else if (protocol==3) {
+		    	ipPermissions.add(
+                        new IpPermission()
+            	            .withIpProtocol("tcp")
+            	            .withToPort(65535)
+            	            .withFromPort(0)
+            	            .withIpv4Ranges(ip_range));
+		    }
+		    else if (protocol==4) {
+		    	ipPermissions.add(
+                        new IpPermission()
+            	            .withIpProtocol("udp")
+            	            .withToPort(65535)
+            	            .withFromPort(0)
+            	            .withIpv4Ranges(ip_range));
+		    }
+		    else if (protocol==5) {
+		    	ipPermissions.add(
+                        new IpPermission()
+            	            .withIpProtocol("icmp-ipv4")
+            	            .withIpv4Ranges(ip_range));
+		    }
+		    else if (protocol==6) {
+		    	ipPermissions.add(
+                        new IpPermission()
+            	            .withIpProtocol("tcp")
+            	            .withToPort(22)
+            	            .withFromPort(22)
+            	            .withIpv4Ranges(ip_range));
+		    }
+		    else if (protocol==7) {
+		    	ipPermissions.add(
+                        new IpPermission()
+            	            .withIpProtocol("tcp")
+            	            .withToPort(25)
+            	            .withFromPort(25)
+            	            .withIpv4Ranges(ip_range));
+		    }
+		    else if (protocol==8) {
+		    	ipPermissions.add(
+                        new IpPermission()
+            	            .withIpProtocol("tcp")
+            	            .withToPort(80)
+            	            .withFromPort(80)
+            	            .withIpv4Ranges(ip_range));
+		    }
+        	System.out.println();	
+        }
+        
+        AuthorizeSecurityGroupIngressRequest auth_request = new
+            AuthorizeSecurityGroupIngressRequest()
+                .withGroupName(group_name)
+                .withIpPermissions(ipPermissions);
+
+        AuthorizeSecurityGroupIngressResult auth_response =
+            ec2.authorizeSecurityGroupIngress(auth_request);
+
+        System.out.printf(
+            "Successfully added ingress policy to security group %s",group_name);
+	}
+	public static void delete_security_group() {
+		String delete_group_id=null;
+		System.out.print("Enter security group id: ");  
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			delete_group_id = br.readLine();
+		} catch(IOException e){
+			e.printStackTrace();
+		}  
+		System.out.println("Deleting.... "+delete_group_id);
+
+		DeleteSecurityGroupRequest request = new DeleteSecurityGroupRequest()
+		    .withGroupId(delete_group_id);
+
+		DeleteSecurityGroupResult response = ec2.deleteSecurityGroup(request);
+		System.out.printf("Successfully deleted security group id %s",delete_group_id);
 	}
 	
 	
