@@ -146,11 +146,13 @@ public class ec2_instance {
 						"[id] %s, " +
 						"[AMI] %s, " +
 						"[type] %s, " +
+						"[Security group] %s, " +
 						"[state] %10s, " +
 						"[monitoring state] %s",
 						instance.getInstanceId(),
 						instance.getImageId(),
 						instance.getInstanceType(),
+						instance.getSecurityGroups(),
 						instance.getState().getName(),
 						instance.getMonitoring().getState());
 						}
@@ -235,10 +237,18 @@ public class ec2_instance {
 	
 	public static void create_instance() {
 		String ami_id=null;
+		String sc=null;
 		System.out.print("Enter AMI id: ");  
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			ami_id = br.readLine();
+		} catch(IOException e){
+			e.printStackTrace();
+		}
+		System.out.print("Enter Security group id: ");  
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			sc = br.readLine();
 		} catch(IOException e){
 			e.printStackTrace();
 		}
@@ -247,6 +257,7 @@ public class ec2_instance {
 		RunInstancesRequest run_request = new RunInstancesRequest()
 			    .withImageId(ami_id)
 			    .withInstanceType(InstanceType.T2Micro)
+			    .withSecurityGroupIds(sc)
 			    .withMaxCount(1)
 			    .withMinCount(1);
 
@@ -255,7 +266,7 @@ public class ec2_instance {
 		String reservation_id = run_response.getReservation().getInstances().get(0).getInstanceId();
 
         System.out.printf(
-            "Successfully started EC2 instance %s based on AMI %s",reservation_id, ami_id);
+            "Successfully started EC2 instance %s based on AMI %s and Security group %s",reservation_id, ami_id,sc);
 	}
 	
 	public static void reboot_instance() {
