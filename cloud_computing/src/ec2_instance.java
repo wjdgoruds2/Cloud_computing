@@ -2,9 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import com.amazonaws.AmazonClientException;
@@ -169,16 +167,22 @@ public class ec2_instance {
 	public static void available_zones() {
 		DescribeAvailabilityZonesResult zones_response =
 			    ec2.describeAvailabilityZones();
+		int cnt=0;
+		System.out.println("Available zones....");
 
 			for(AvailabilityZone zone : zones_response.getAvailabilityZones()) {
+				cnt+=1;
 			    System.out.printf(
-			        "Found availability zone %s " +
-			        "with status %s " +
-			        "in region %s",
-			        zone.getZoneName(),
-			        zone.getState(),
-			        zone.getRegionName());
+			        "[id] %s " +
+			        "[region] %s " +
+			        "[zone] %s",
+			        zone.getZoneId(),
+			        zone.getRegionName(),
+			        zone.getZoneName());
+			    System.out.println();
+			    
 			}
+			System.out.printf("You have access to %d Availability Zones",cnt);
 	}
 	
 	public static void start_instance() {
@@ -201,13 +205,14 @@ public class ec2_instance {
 	
 	public static void available_regions() {
 		DescribeRegionsResult regions_response = ec2.describeRegions();
-
+		System.out.println("Available zones....");
 		for(Region region : regions_response.getRegions()) {
 		    System.out.printf(
-		        "Found region %s " +
-		        "with endpoint %s",
+		        "[region] %s " +
+		        "[endpoint] %s",
 		        region.getRegionName(),
 		        region.getEndpoint());
+		    System.out.println();
 		}
 	}
 	
@@ -230,13 +235,14 @@ public class ec2_instance {
 	
 	public static void create_instance() {
 		String ami_id=null;
+		System.out.print("Enter AMI id: ");  
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 			ami_id = br.readLine();
 		} catch(IOException e){
 			e.printStackTrace();
 		}
-		System.out.print("Enter AMI id: ");  
+		
 		
 		RunInstancesRequest run_request = new RunInstancesRequest()
 			    .withImageId(ami_id)
