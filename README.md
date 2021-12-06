@@ -23,7 +23,7 @@
 ```
 ## Demo / 데모 영상
 
-* https://youtu.be/tpPjBgFMnas
+* https://www.youtube.com/watch?v=0-9RB1tu7GI
  
 ## Built With / 팀원
 
