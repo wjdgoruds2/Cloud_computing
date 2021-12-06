@@ -21,7 +21,10 @@
 컴파일:javac -cp "./libs/awssdk/*:./libs/http/*:./libs/jackson/*:./libs/etclib/*:." ec2_instance.java
 실행:java -cp "./libs/awssdk/*:./libs/http/*:./libs/jackson/*:./libs/etclib/*:." ec2_instance
 ```
+## Demo / 데모 영상
 
+* https://youtu.be/tpPjBgFMnas
+ 
 ## Built With / 팀원
 
 * [정해경] - 2017038062
